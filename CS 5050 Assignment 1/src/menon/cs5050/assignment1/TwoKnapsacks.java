@@ -16,7 +16,7 @@ public class TwoKnapsacks {
 	//Call a recursive method that checks if there exists a subset of objects that fill both knapsacks exactly
 	public boolean knap() {	
 		
-		return willTheyExactlyFitRecursive(this.objectSizes.length, this.knapsack1Size, this.knapsack2Size);
+		return willTheyExactlyFitRecursive(this.objectSizes.length - 1, this.knapsack1Size, this.knapsack2Size);
 	}
 	
 	//This is the recursive method called from method knap
