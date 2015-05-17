@@ -35,6 +35,53 @@ public class TwoKnapsacks {
 		return willTheyExactlyFitRecursiveWithMemo(this.objectSizes.length - 1, this.knapsack1Size, this.knapsack2Size);
 	}
 	
+	//Dynamic Programming based method that checks if there exists a subset of objects that fill both knapsacks exactly
+	public boolean knapDP() {
+		
+		int dpCuboidHeight = this.objectSizes.length + 1, dpCuboidWidth = this.knapsack1Size + 1, dpCuboidDepth = this.knapsack2Size + 1;
+		
+		//This array will already have default boolean false values for the cases where number of objects is zero
+		boolean dpSolutionCubeoid[][][] = new boolean[dpCuboidHeight][dpCuboidWidth][dpCuboidDepth];
+		
+		//Fill in the default solution of true for cases where both knapsacks are of size zero
+		for (int counter = 0; counter < dpCuboidHeight; ++counter) {
+			dpSolutionCubeoid[counter][0][0] = true;
+		}
+		
+		//Temporary variables to hold neighboring cube values
+		boolean neighborBelow = false, neighborInKnapsack1 = false, neighborInKnapsack2 = false;	
+		int testLength = 0;
+		
+		//Loop through all the entries in the cuboid and end in the far top corner
+		for (int heightCounter = 1; heightCounter < dpCuboidHeight; ++heightCounter) {
+			for (int widthCounter = 1; widthCounter < dpCuboidWidth; ++widthCounter) {
+				for (int depthCounter = 1; depthCounter < dpCuboidDepth; ++depthCounter) {
+
+					neighborBelow = dpSolutionCubeoid[heightCounter - 1][widthCounter][depthCounter];
+					
+					testLength = widthCounter - this.objectSizes[heightCounter];
+					if (testLength < 0) {
+						neighborInKnapsack1 = false;
+					} else {
+						neighborInKnapsack1 = dpSolutionCubeoid[heightCounter - 1][testLength][depthCounter];
+					}
+					
+					testLength = depthCounter - this.objectSizes[heightCounter];
+					if (testLength < 0) {
+						neighborInKnapsack2 = false;
+					} else {
+						neighborInKnapsack2 = dpSolutionCubeoid[heightCounter - 1][widthCounter][testLength];
+					}				
+				
+					dpSolutionCubeoid[heightCounter][widthCounter][depthCounter] = neighborBelow || neighborInKnapsack1 || neighborInKnapsack2;
+					
+				}
+			}
+		}
+		
+		return dpSolutionCubeoid[dpCuboidHeight - 1][dpCuboidWidth - 1][dpCuboidDepth - 1];
+	}
+	
 	//This is the recursive method called from method knap
 	private boolean willTheyExactlyFitRecursive(int numberOfObjects, int knapsack1Size, int knapsack2Size) {
 		
