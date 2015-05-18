@@ -38,14 +38,20 @@ public class TwoKnapsacks {
 	//Dynamic Programming based method that checks if there exists a subset of objects that fill both knapsacks exactly
 	public boolean knapDP() {
 		
-		int dpCuboidHeight = this.objectSizes.length + 1, dpCuboidWidth = this.knapsack1Size + 1, dpCuboidDepth = this.knapsack2Size + 1;
+		int dpCuboidHeight = this.objectSizes.length, dpCuboidWidth = this.knapsack1Size + 1, dpCuboidDepth = this.knapsack2Size + 1;
 		
 		//This array will already have default boolean false values for the cases where number of objects is zero
 		boolean dpSolutionCubeoid[][][] = new boolean[dpCuboidHeight][dpCuboidWidth][dpCuboidDepth];
 		
-		//Fill in the default solution of true for cases where both knapsacks are of size zero
-		for (int counter = 0; counter < dpCuboidHeight; ++counter) {
-			dpSolutionCubeoid[counter][0][0] = true;
+		//Fill in the default solution of true for cases where each knapsack is of size zero
+		dpSolutionCubeoid[0][0][0] = true;
+		for (int heightCounter = 1; heightCounter < dpCuboidHeight; ++heightCounter) {
+			for (int widthCounter = 0; widthCounter < dpCuboidWidth; ++widthCounter) {
+				dpSolutionCubeoid[heightCounter][widthCounter][0] = true;
+			}
+			for (int depthCounter = 0; depthCounter < dpCuboidWidth; ++depthCounter) {
+				dpSolutionCubeoid[heightCounter][0][depthCounter] = true;
+			}
 		}
 		
 		//Temporary variables to hold neighboring cube values
@@ -136,33 +142,32 @@ public class TwoKnapsacks {
 			this.cache[numberOfObjects - 1][knapsack1Size][knapsack2Size] = willItFitWithObjectDiscarded;
 			this.cacheValid[numberOfObjects - 1][knapsack1Size][knapsack2Size] = true;
 		}
-
 		
-		int testKanpsackSize = 0;
+		int testKnapsackSize = 0;
 
 		//Case for object being put in knapsack 1
 		boolean willItFitWithObjectInKnapsack1 = false;
-		testKanpsackSize = knapsack1Size - this.objectSizes[numberOfObjects];
-		if (testKanpsackSize >= 0) {
-			if (this.cacheValid[numberOfObjects - 1][testKanpsackSize][knapsack2Size]) {
-				willItFitWithObjectInKnapsack1 = this.cache[numberOfObjects - 1][testKanpsackSize][knapsack2Size];
+		testKnapsackSize = knapsack1Size - this.objectSizes[numberOfObjects];
+		if (testKnapsackSize >= 0) {
+			if (this.cacheValid[numberOfObjects - 1][testKnapsackSize][knapsack2Size]) {
+				willItFitWithObjectInKnapsack1 = this.cache[numberOfObjects - 1][testKnapsackSize][knapsack2Size];
 			} else {
-				willItFitWithObjectInKnapsack1 = willTheyExactlyFitRecursiveWithMemo(numberOfObjects - 1, testKanpsackSize, knapsack2Size);
-				this.cache[numberOfObjects - 1][testKanpsackSize][knapsack2Size] = willItFitWithObjectInKnapsack1;
-				this.cacheValid[numberOfObjects - 1][testKanpsackSize][knapsack2Size] = true;
+				willItFitWithObjectInKnapsack1 = willTheyExactlyFitRecursiveWithMemo(numberOfObjects - 1, testKnapsackSize, knapsack2Size);
+				this.cache[numberOfObjects - 1][testKnapsackSize][knapsack2Size] = willItFitWithObjectInKnapsack1;
+				this.cacheValid[numberOfObjects - 1][testKnapsackSize][knapsack2Size] = true;
 			}
 		}
 		
 		//Case for object being put in knapsack 2
 		boolean willItFitWithObjectInKnapsack2 = false;
-		testKanpsackSize = knapsack2Size - this.objectSizes[numberOfObjects];
-		if (testKanpsackSize >= 0) {
-			if (this.cacheValid[numberOfObjects - 1][knapsack1Size][testKanpsackSize]) {
-				willItFitWithObjectInKnapsack2 = this.cache[numberOfObjects - 1][knapsack1Size][testKanpsackSize];
+		testKnapsackSize = knapsack2Size - this.objectSizes[numberOfObjects];
+		if (testKnapsackSize >= 0) {
+			if (this.cacheValid[numberOfObjects - 1][knapsack1Size][testKnapsackSize]) {
+				willItFitWithObjectInKnapsack2 = this.cache[numberOfObjects - 1][knapsack1Size][testKnapsackSize];
 			} else {
-				willItFitWithObjectInKnapsack2 = willTheyExactlyFitRecursiveWithMemo(numberOfObjects - 1, knapsack1Size, testKanpsackSize);
-				this.cache[numberOfObjects - 1][knapsack1Size][testKanpsackSize] = willItFitWithObjectInKnapsack2;
-				this.cacheValid[numberOfObjects - 1][knapsack1Size][testKanpsackSize] = true;
+				willItFitWithObjectInKnapsack2 = willTheyExactlyFitRecursiveWithMemo(numberOfObjects - 1, knapsack1Size, testKnapsackSize);
+				this.cache[numberOfObjects - 1][knapsack1Size][testKnapsackSize] = willItFitWithObjectInKnapsack2;
+				this.cacheValid[numberOfObjects - 1][knapsack1Size][testKnapsackSize] = true;
 			}
 		}
 		return willItFitWithObjectDiscarded || willItFitWithObjectInKnapsack1 || willItFitWithObjectInKnapsack2;
