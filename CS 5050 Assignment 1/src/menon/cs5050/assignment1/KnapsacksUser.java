@@ -8,8 +8,8 @@ public class KnapsacksUser {
 	private int objectSizes[];
 	private TwoKnapsacks twoKnapsacks;
 	
-	private static final int MAXIMUM_OBJECT_SIZE = 100;
-	private static final int NUMBER_OF_OBJECTS = 50;
+	private static final int MAXIMUM_OBJECT_SIZE = 90;
+	private static final int NUMBER_OF_OBJECTS = 100;
 	private static final int KNAPSACK_1_SIZE = 1000;
 	private static final int KNAPSACK_2_SIZE = 1000;
 	
@@ -34,11 +34,21 @@ public class KnapsacksUser {
 	public static void main(String[] args) {
 		
 		KnapsacksUser knapsacksUser = new KnapsacksUser();
-		System.out.println("These are the object sizes:");
+		/*System.out.println("These are the object sizes:");
 		for(int objectSize : knapsacksUser.objectSizes) {
 			System.out.println(objectSize);
-		}
-		System.out.println((knapsacksUser.twoKnapsacks.knapMemo() ? "Could" : "Could not") + " fit the objects into the knapsacks.");
+		}*/
+		
+		long beforeRecursiveRun = System.currentTimeMillis();
+		boolean recursionWithMemoRunSuccess = knapsacksUser.twoKnapsacks.knapMemo();
+		long afterRecursiveRun = System.currentTimeMillis();
+		System.out.println((recursionWithMemoRunSuccess ? "Could" : "Could not") + " fit the objects into the knapsacks using recursive memo. Time taken is " + (afterRecursiveRun - beforeRecursiveRun) + " ms.");
+		
+		long beforeDpRun = System.currentTimeMillis();
+		boolean dpRunSuccess = knapsacksUser.twoKnapsacks.knapDP();
+		long afterDpRun = System.currentTimeMillis();		
+		System.out.println((dpRunSuccess ? "Could" : "Could not") + " fit the objects into the knapsacks using DP. Time taken is " + (afterDpRun - beforeDpRun) + " ms.");
+		
 	}
 
 }

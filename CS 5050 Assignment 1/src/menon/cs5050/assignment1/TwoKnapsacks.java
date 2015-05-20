@@ -43,15 +43,10 @@ public class TwoKnapsacks {
 		//This array will already have default boolean false values for the cases where number of objects is zero
 		boolean dpSolutionCubeoid[][][] = new boolean[dpCuboidHeight][dpCuboidWidth][dpCuboidDepth];
 		
-		//Fill in the default solution of true for cases where each knapsack is of size zero
-		dpSolutionCubeoid[0][0][0] = true;
-		for (int heightCounter = 1; heightCounter < dpCuboidHeight; ++heightCounter) {
-			for (int widthCounter = 0; widthCounter < dpCuboidWidth; ++widthCounter) {
-				dpSolutionCubeoid[heightCounter][widthCounter][0] = true;
-			}
-			for (int depthCounter = 0; depthCounter < dpCuboidWidth; ++depthCounter) {
-				dpSolutionCubeoid[heightCounter][0][depthCounter] = true;
-			}
+
+		//Fill in the default solution of true for cases where both knapsacks are of size zero
+		for (int counter = 0; counter < dpCuboidHeight; ++counter) {
+			dpSolutionCubeoid[counter][0][0] = true;
 		}
 		
 		//Temporary variables to hold neighboring cube values
@@ -60,8 +55,8 @@ public class TwoKnapsacks {
 		
 		//Loop through all the entries in the cuboid and end in the far top corner
 		for (int heightCounter = 1; heightCounter < dpCuboidHeight; ++heightCounter) {
-			for (int widthCounter = 1; widthCounter < dpCuboidWidth; ++widthCounter) {
-				for (int depthCounter = 1; depthCounter < dpCuboidDepth; ++depthCounter) {
+			for (int widthCounter = 0; widthCounter < dpCuboidWidth; ++widthCounter) {
+				for (int depthCounter = 0; depthCounter < dpCuboidDepth; ++depthCounter) {
 
 					neighborBelow = dpSolutionCubeoid[heightCounter - 1][widthCounter][depthCounter];
 					
